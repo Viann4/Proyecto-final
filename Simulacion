@@ -1,0 +1,62 @@
+import matplotlib.pyplot as plt
+import numpy as np
+unos = 0
+ceros = 0
+
+n = 300
+
+ini = np.random.randint(0, 2, size=(n, n))
+a = np.zeros([n + 2, n + 2], dtype = int)
+
+for f in xrange(0, n):
+    for c in xrange(0, n):
+        if f == 0 and c == 0:
+            a[0][0] = ini[n - 1][n - 1]
+            a[0][n + 1] = ini[n - 1][0]
+            a[n + 1][0] = ini[0][n - 1]
+            a[n + 1][n + 1] = ini[0][0]
+            for filas in xrange(0, n):
+                a[filas + 1][0] = ini[filas][n - 1]
+                a[filas + 1][n + 1] = ini[filas][0]
+        if f == 0:
+            a[f + 1][c + 1] = ini[f][c]
+            a[f][c + 1] = ini[n - 1][c]
+            continue
+        if f == (n - 1):
+            a[f + 1][c + 1] = ini[f][c]
+            a[f + 2][c + 1] = ini[0][c]
+            continue
+        a[f + 1][c + 1] = ini[f][c]
+
+
+for f in xrange(1, (n - 1)):
+    for c in xrange(1, (n - 1)):
+        for fs in xrange((f - 1), (f + 2)):
+
+            for cs in xrange((c - 1), (c + 2)):
+
+                if f != fs or c != cs:
+
+                    if a[fs][cs] == 1:
+                        unos += 1
+                    else:
+                        ceros += 1
+
+        if unos >= 5:
+            a[f][c] = 1
+        elif ceros >= 5:
+            a[f][c] = 0
+        unos = 0
+        ceros = 0
+
+for f in xrange(0, n):
+    for c in xrange(0, n):
+        ini[f][c] = a[f + 1][c + 1]
+
+
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+ax.set_aspect('equal')
+plt.imshow(ini, interpolation='nearest', cmap=plt.cm.ocean)
+plt.colorbar()
+plt.show()
